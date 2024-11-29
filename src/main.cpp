@@ -2,7 +2,6 @@
 
 #include "system_op.h"
 
-
 //-------------------------------BPM SPO2 CONFIG-------------------------------
 // Create an instance of the MAX30105 class to interact with the sensor
 MAX30105 particleSensor;
