@@ -11,14 +11,19 @@ void serial_sendback(){
     sendbackMsg = "";
 }
 
+void compileACK(){
+    sendbackMsg = "ACK-";
+    sendbackMsg += receivedMsg;
+    serial_sendback();
+}
+
 void process_string(){
     receivedMsg.trim();
     // Every command will return NUM_SAMPLES of samples.
     // Returning OBJECT TEMPERATURE results
     if (receivedMsg.equals("TEMP-GETOBJ")){
-        sendbackMsg = "ACK-";
-        sendbackMsg += receivedMsg;
-        serial_sendback();
+        compileACK();
+        
         for (sendbackTimes = 0; sendbackTimes < NUM_SAMPLES; sendbackTimes++){
             updateTempData();
             sendbackMsg = "OBJ-";
@@ -31,9 +36,8 @@ void process_string(){
 
     // Returning AMBIENT TEMPERATURE results
     if (receivedMsg.equals("TEMP-GETAMB")){
-        sendbackMsg = "ACK-";
-        sendbackMsg += receivedMsg;
-        serial_sendback();
+        compileACK();
+
         for (sendbackTimes = 0; sendbackTimes < NUM_SAMPLES; sendbackTimes++){
             updateTempData();
             sendbackMsg = "AMB-";
@@ -46,9 +50,7 @@ void process_string(){
 
     // Returning BPM and OXYGEN SATURATION results
     if (receivedMsg.equals("POX-GETDATA")){
-        sendbackMsg = "ACK-";
-        sendbackMsg += receivedMsg;
-        serial_sendback();
+        compileACK();
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){
@@ -66,9 +68,7 @@ void process_string(){
     }
 
     if (receivedMsg.equals("SCALE-GETWEIGHT")){
-        sendbackMsg = "ACK-";
-        sendbackMsg += receivedMsg;
-        serial_sendback();
+        compileACK();
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){
@@ -82,6 +82,39 @@ void process_string(){
         return;
     }
 
+    // SERVO SECTION
+    if (receivedMsg.equals("SERVO-MOVEUP")){
+        compileACK();
+        servo_setMoveFlag(SERVO_MOVE_UP);
+        return;
+    }
+
+    if (receivedMsg.equals("SERVO-MOVEDN")){
+        compileACK();
+        servo_setMoveFlag(SERVO_MOVE_DOWN);
+        return;
+    }
+
+    if (receivedMsg.equals("SERVO-STOP")){
+        compileACK();
+        servo_setMoveFlag(SERVO_MOVE_STOP);
+        return;
+    }
+
+    if (receivedMsg.equals("SERVO-GETANGLE")){
+        compileACK();
+
+        sendbackTimes = 0;
+        while(sendbackTimes < NUM_SAMPLES){
+            sendbackMsg = "ANGLE-";
+            sendbackMsg += servo_getPos();
+            serial_sendback();
+            sendbackTimes++;
+        }
+        return;
+    }
+
+    // NACK SENDBACK
     sendbackMsg = "NACK-SYNTAXERROR-";
     sendbackMsg += receivedMsg;
     serial_sendback();

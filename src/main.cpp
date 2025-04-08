@@ -2,7 +2,7 @@
 
 void setup(){
   Serial.begin(115200);
-  delay(3000);
+  delay(2000);
 
   // Activates sensors, tries to reactivate them 1 time if it fails.
   if (!initMAX30102())
@@ -14,11 +14,18 @@ void setup(){
     initMLX90614();
   }
   
+  servo_init();
+
   initBLE();
   connectToScale();
 }
 
 void loop(){
-  connectToScale();
+  
+  if(!scaleConnectStatus()){
+    connectToScale();
+  }
+  
+  servo_updateSerial();
   serial_receive();
 }

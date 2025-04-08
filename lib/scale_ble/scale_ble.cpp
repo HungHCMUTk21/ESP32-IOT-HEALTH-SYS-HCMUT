@@ -36,6 +36,10 @@ float getDefWeight(){
     return defWeight;
 }
 
+uint8_t scaleConnectStatus(){
+    return connected_flag;
+}
+
 // Callback function for BLE characteristc data nofication
 void charCallback(BLERemoteCharacteristic* remoteChr, uint8_t* pData, size_t length, bool isNotify){
     // Calculate weight using the data received
@@ -164,7 +168,7 @@ bool initScaleConnection() {
       pClient -> disconnect();
       return false;
     }
-    Serial.println("Characteristic found. Setting callback for characteristic notification.");
+    Serial.println("Characteristic found. Setting notifs callback.");
     remoteChar -> registerForNotify(charCallback);
     return true;
 }

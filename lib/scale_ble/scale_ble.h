@@ -55,4 +55,10 @@ void initBLE();
  */
 void turnOffBLE();
 
+/**
+ * @brief Checks the current connection status of the scale
+ * @return True if connected, false otherwise
+ */
+uint8_t scaleConnectStatus();
+
 #endif /* SCALE_BLE_ */
