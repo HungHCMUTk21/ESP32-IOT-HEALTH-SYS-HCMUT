@@ -12,7 +12,8 @@
 #include <Wire.h>
 #include "Adafruit_MLX90614.h"
 
-//#define MLX90614_DEBUG // Enable MLX90614 serial debugging 
+//#define MLX90614_DEBUG // Enable MLX90614 serial debugging
+
 #define MLX90614_SDA 11   // MLX90614 I2C SDA pin
 #define MLX90614_SCL 12   // MLX90614 I2C SCL pin
 #define MLX90614_ADR 0x5A // MLX90614 I2C address

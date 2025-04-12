@@ -9,6 +9,7 @@ double t_amb = 0.0; // Ambient Temperature
 bool mlx_activated = false;
 
 uint8_t initMLX90614(){
+#ifdef MLX90614_DEBUG
     Serial.print("Initializing MLX90614 temperature sensor --> ");
     mlxI2C.begin(MLX90614_SDA, MLX90614_SCL);
     // Initialize sensor
@@ -18,6 +19,14 @@ uint8_t initMLX90614(){
         Serial.println("MLX90614 activated successfully.");
         mlx_activated = true;
     }
+#else
+    mlxI2C.begin(MLX90614_SDA, MLX90614_SCL);
+    // Initialize sensor
+    if (!mlx_sensor.begin(MLX90614_ADR, &mlxI2C)) {
+    } else{
+        mlx_activated = true;
+    }
+#endif
     return mlx_activated;
 }
 

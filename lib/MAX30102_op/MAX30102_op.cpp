@@ -8,6 +8,7 @@ bool      max_activated = false; // Sensor activated and connected flag
 uint8_t initMAX30102(){
     pinMode(MAX30102_INT, INPUT);  //pin D10 connects to the interrupt output pin of the MAX30102
     //initialize the MAX30102
+#ifdef MAX30102_DEBUG
     Serial.print("Initializing MAX30102 Pulse Oxymeter sensor --> ");
     if(maxim_max30102_init(MAX30102_SDA, MAX30102_SCL)){
         Serial.println("MAX30102 activated successfully.");
@@ -16,6 +17,14 @@ uint8_t initMAX30102(){
     }else{
         Serial.println("MAX30102 FAILED to start.");
     }
+#else
+    if(maxim_max30102_init(MAX30102_SDA, MAX30102_SCL)){
+        max_activated = true;
+        old_n_spo2 = 0.0;
+    }else{
+        max_activated = false;
+    }
+#endif
     return max_activated;
 }
 

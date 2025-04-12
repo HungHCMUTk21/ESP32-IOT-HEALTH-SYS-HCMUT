@@ -15,6 +15,7 @@ static bool connected_flag = false;
 
 float defWeight = 0.0; // definitive weight
 
+bool valid_data = false; // Data for sending flag
 bool isDefWeight = false; // Stable weight flag
 bool isOnScale = false; // If weight is still on the scale flag
 
@@ -23,18 +24,6 @@ bool isOnScale = false; // If weight is still on the scale flag
 static BLEUUID servUUID(xiaomiScaleServUUID);
 static BLEUUID charUUID(xiaomiScaleCharUUID);
 static BLEAddress MACaddr(xiaomiScaleMAC);
-
-uint8_t validWeight(){
-    return isDefWeight;
-}
-
-uint8_t onScale(){
-    return isOnScale;
-}
-
-float getDefWeight(){
-    return defWeight;
-}
 
 uint8_t scaleConnectStatus(){
     return connected_flag;
@@ -53,6 +42,7 @@ void charCallback(BLERemoteCharacteristic* remoteChr, uint8_t* pData, size_t len
 
     // register definitive weight
     if (isDefWeight){
+        valid_data = true;
         defWeight = weight;
     }
 #ifdef BLE_DEBUG
@@ -81,11 +71,12 @@ void charCallback(BLERemoteCharacteristic* remoteChr, uint8_t* pData, size_t len
 
 // Search for our Smart Scale using MAC address (connectionMode 0)
 void connectModeMAC(BLEAdvertisedDevice &BLEdevice){
+#ifdef BLE_DEBUG
     if (BLEdevice.getAddress() != MACaddr){
         Serial.print(".");
     } else{
         Serial.println("");
-        Serial.print("Xiaomi Mi Smart Scale 2 weight scale found at MAC address:");
+        Serial.print("Xiaomi Mi Smart Scale 2 weight scale found at MAC address: ");
         Serial.println(BLEdevice.getAddress().toString().c_str());
         BLEDevice::getScan() -> stop();
 
@@ -93,14 +84,22 @@ void connectModeMAC(BLEAdvertisedDevice &BLEdevice){
         xiaomiScale = new BLEAdvertisedDevice(BLEdevice);
         goConnect = true;
     }
+#else
+    if (BLEdevice.getAddress() == MACaddr){
+        BLEDevice::getScan() -> stop();
+        xiaomiScale = new BLEAdvertisedDevice(BLEdevice);
+        goConnect = true;
+    }
+#endif
 }
 // Search for our Smart Scale using device's name (connectionMode 1)
 void connectModeName(BLEAdvertisedDevice &BLEdevice){
+#ifdef BLE_DEBUG
     if (BLEdevice.getName() != xiaomiScaleName){
         Serial.print(".");
     } else{
         Serial.println("");
-        Serial.print("Xiaomi Mi Smart Scale 2 weight scale found! ");
+        Serial.print("Xiaomi Mi Smart Scale 2 weight scale found at MAC address: ");
         Serial.println(BLEdevice.getAddress().toString().c_str());
         BLEDevice::getScan() -> stop();
 
@@ -108,6 +107,13 @@ void connectModeName(BLEAdvertisedDevice &BLEdevice){
         xiaomiScale = new BLEAdvertisedDevice(BLEdevice);
         goConnect = true;
     }
+#else
+        if (BLEdevice.getName() == xiaomiScaleName){
+        BLEDevice::getScan() -> stop();
+        xiaomiScale = new BLEAdvertisedDevice(BLEdevice);
+        goConnect = true;
+    }
+#endif
 }
 
 // Callback class for each advertising device in the vicinity
@@ -121,20 +127,22 @@ class deviceCallback:public BLEAdvertisedDeviceCallbacks{
         } else{
             connectModeName(advertisedDevice);
         }
-    } else{
-      Serial.print(".");
     }
   } 
 };
 
 // Callback class for device events / device connections
 class ClientCB:public BLEClientCallbacks{
-  void onConnect(BLEClient* pclient){
-  }
-  void onDisconnect(BLEClient* pclient){
-    Serial.println("Scale disconnected. Reconnecting...");
-    connected_flag = false;
-  }
+    void onConnect(BLEClient* pclient){
+        
+    }
+    void onDisconnect(BLEClient* pclient){
+#ifdef BLE_DEBUG
+        Serial.println("Scale disconnected. Reconnecting...");
+#endif
+        Serial.println("SCALE-STATUS-0");
+        connected_flag = false;
+    }
 };
 
 bool initScaleConnection() {
@@ -151,8 +159,9 @@ bool initScaleConnection() {
 
     // Connect to the remote BLE Server.
     pClient -> connect(xiaomiScale);
-    Serial.println("Connected to scale");
+    Serial.println("SCALE-STATUS-1");
 
+#ifdef BLE_DEBUG
     // Obtain a reference to the service we are after in the remote BLE server.
     BLERemoteService* pRemoteService = pClient -> getService(servUUID);
     if(pRemoteService == nullptr) {
@@ -162,6 +171,7 @@ bool initScaleConnection() {
     }
     Serial.println("Service found.");
 
+    // Obtain a reference to the characteristic we are after in the remote BLE server.
     remoteChar = pRemoteService -> getCharacteristic(charUUID);
     if(remoteChar == nullptr) {
       Serial.print("ERROR - Failed to find characteristic");
@@ -171,10 +181,31 @@ bool initScaleConnection() {
     Serial.println("Characteristic found. Setting notifs callback.");
     remoteChar -> registerForNotify(charCallback);
     return true;
+#else
+    // Obtain a reference to the service we are after in the remote BLE server.
+    BLERemoteService* pRemoteService = pClient -> getService(servUUID);
+    if(pRemoteService == nullptr) {
+      Serial.println("SCALE-ERROR-NOSERVICE");
+      pClient -> disconnect();
+      return false;
+    }
+
+    // Obtain a reference to the characteristic we are after in the remote BLE server.
+    remoteChar = pRemoteService -> getCharacteristic(charUUID);
+    if(remoteChar == nullptr) {
+      Serial.print("SCALE-ERROR-NOCHAR");
+      pClient -> disconnect();
+      return false;
+    }
+    remoteChar -> registerForNotify(charCallback);
+    
+    return true;
+#endif
 }
+
 BLEScan* BLEScanPtr = BLEDevice::getScan();
 void initBLE(){
-    Serial.println("Initializing BLE");
+    Serial.println("SCALE-BLE-START");
     
     BLEDevice::init("");
     
@@ -189,13 +220,11 @@ void initBLE(){
 
 bool connectToScale(){
     while (goConnect && !connected_flag){
-        Serial.print(".");
         connected_flag = initScaleConnection();
         delay(200);
     }
     
     while (!goConnect){
-        Serial.print(".");
         BLEScanPtr -> start(4, false);
         delay(200);
     }
@@ -207,3 +236,21 @@ void turnOffBLE(){
     btStop();
     esp_bt_controller_disable();
 }
+
+uint8_t validSendWeight(){
+    return valid_data;
+}
+
+void resetWeightSendFlag(){
+    valid_data = false;
+}
+
+uint8_t onScale(){
+    return isOnScale;
+}
+
+float getDefWeight(){
+    return defWeight;
+}
+
+

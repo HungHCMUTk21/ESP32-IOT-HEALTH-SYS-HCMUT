@@ -23,4 +23,10 @@
  */
 void serial_receive();
 
+/**
+ * @brief Check if the system is busy or not.
+ * @return True if the system is currently doing something else, false otherwise.
+ */
+uint8_t system_busy();
+
 #endif /* SYSTEM_OP_ */

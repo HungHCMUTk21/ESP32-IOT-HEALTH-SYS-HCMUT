@@ -10,7 +10,8 @@
 #pragma once
 
 #include <BLEDevice.h>
-//#define BLE_DEBUG // Serial debugging
+
+// #define BLE_DEBUG // Serial debugging
 
 //===============XIAOMI SMART SCALE 2 BLUETOOTH OPERATION PROTOTYPES===============
 #define scaleConnectionMode 0 // Mode = 0: connect using MAC address; Mode = 1: connect using device name 
@@ -20,10 +21,16 @@
 #define xiaomiScaleCharUUID "00002a9d-0000-1000-8000-00805f9b34fb" // Xiaomi Scale Characteristic UUID
 
 /**
- * @brief Check if the weight is definiteve weight
+ * @brief Check if the weight is definitive weight and ready for sending
  * @return True if Weight is definitive - False otherwise
  */
-uint8_t validWeight();
+uint8_t validSendWeight();
+
+/**
+ * @brief Data done sending, reset the data sending flag.
+ * @return Void.
+ */
+void resetWeightSendFlag();
 
 /**
  * @brief Check if the weight is still on the scale

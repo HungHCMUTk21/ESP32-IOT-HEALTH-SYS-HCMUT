@@ -21,11 +21,15 @@
 #define SERVO_MOVE_UP       1
 #define SERVO_MOVE_DOWN     2
 #define SERVO_MOVE_STOP     3
+#define SERVO_MOVE_DEFAULT  4
 
+// Positional defines
 #define SERVO_START_POS     512 // Starting position of the servo.
+#define SERVO_MAX_UP_POS    660 // Maximum up-turning position. DO NOT CHANGE.
+#define SERVO_MAX_DN_POS    390 // Maximum down-turning position. DO NOT CHANGE.
 
 // For controlling the servo's turning speed
-#define SERVO_SPD   50
+#define SERVO_SPD   25
 /**
  * @brief Start the servo serial communication and set initial position.
  * @return Void.
@@ -49,5 +53,11 @@ uint16_t servo_getPos();
  * @return Void.
  */
 void servo_setMoveFlag(uint8_t flagnum);
+
+/**
+ * @brief Check if the servo is currently turning or not.
+ * @return True if the servo is turning, false otherwise.
+ */
+uint8_t servo_isMoving();
 
 #endif /* SERVO_OP_ */

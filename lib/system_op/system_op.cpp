@@ -5,6 +5,8 @@ String sendbackMsg = "";
 uint8_t sendbackTimes = 0;
 char cstr[256];
 
+bool isBusy = false; // Flag for checking if the system is currently doing something else or not
+
 void serial_sendback(){
     Serial.println(sendbackMsg);
     // Empty the sendback char string
@@ -72,13 +74,17 @@ void process_string(){
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){
-            if(validWeight()){
+            if(validSendWeight()){
                 sendbackMsg = "WEIGHT-";
                 sendbackMsg += getDefWeight();
                 serial_sendback();
                 sendbackTimes++;
+            }else{
+                sendbackMsg = "SCALE-ERROR-NODATA";
+                break;
             }
         }
+        resetWeightSendFlag();
         return;
     }
 
@@ -101,6 +107,12 @@ void process_string(){
         return;
     }
 
+    if (receivedMsg.equals("SERVO-MOVEDEFAULT")){
+        compileACK();
+        servo_setMoveFlag(SERVO_MOVE_DEFAULT);
+        return;
+    }
+
     if (receivedMsg.equals("SERVO-GETANGLE")){
         compileACK();
 
@@ -113,6 +125,7 @@ void process_string(){
         }
         return;
     }
+    
 
     // NACK SENDBACK
     sendbackMsg = "NACK-SYNTAXERROR-";
@@ -125,8 +138,11 @@ void serial_receive(){
         char incomingChar = Serial.read();  // Read each character from the buffer
         if (incomingChar == '\n') {  // Check if the user pressed Enter (new line character)
             // Print the message
+            isBusy = true;
             process_string();
+
             // Clear the message buffer for the next input
+            isBusy = false;
             receivedMsg = "";
         } else if(incomingChar == '\b' && receivedMsg == ""){
             // There's nothing in the string but the user pressed backspace
@@ -136,4 +152,8 @@ void serial_receive(){
             receivedMsg += incomingChar;
         }
     }   
+}
+
+uint8_t system_busy(){
+    return isBusy;
 }
