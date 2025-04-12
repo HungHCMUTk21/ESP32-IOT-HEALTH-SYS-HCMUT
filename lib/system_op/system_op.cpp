@@ -110,6 +110,7 @@ void process_string(){
     if (receivedMsg.equals("SERVO-MOVEDEFAULT")){
         compileACK();
         servo_setMoveFlag(SERVO_MOVE_DEFAULT);
+        resetWeightSendFlag();
         return;
     }
 
