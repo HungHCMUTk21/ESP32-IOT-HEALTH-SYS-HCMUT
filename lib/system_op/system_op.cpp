@@ -81,6 +81,7 @@ void process_string(){
                 sendbackTimes++;
             }else{
                 sendbackMsg = "SCALE-ERROR-NODATA";
+                serial_sendback();
                 break;
             }
         }
