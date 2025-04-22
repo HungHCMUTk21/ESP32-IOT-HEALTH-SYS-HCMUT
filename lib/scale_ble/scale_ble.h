@@ -15,7 +15,9 @@
 
 //===============XIAOMI SMART SCALE 2 BLUETOOTH OPERATION PROTOTYPES===============
 #define scaleConnectionMode 0 // Mode = 0: connect using MAC address; Mode = 1: connect using device name 
-#define xiaomiScaleMAC      "5c:64:f3:74:f6:c9" // connect using MAC address will provide absolute device connection
+// scale at home: 5c:64:f3:74:f6:c9
+// scale at lab: 5c:64:f3:70:cf:69
+#define xiaomiScaleMAC      "5c:64:f3:70:cf:69" // connect using MAC address will provide absolute device connection
 #define xiaomiScaleName     "MI SCALE2" // connect using device's name might connect to the wrong same-name device
 #define xiaomiScaleServUUID "0000181d-0000-1000-8000-00805f9b34fb" // Xiaomi Scale Service UUID
 #define xiaomiScaleCharUUID "00002a9d-0000-1000-8000-00805f9b34fb" // Xiaomi Scale Characteristic UUID

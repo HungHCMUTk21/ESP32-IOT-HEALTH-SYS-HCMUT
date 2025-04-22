@@ -15,8 +15,8 @@
 
 //#define MAX30102_DEBUG // Enable MAX30102 serial debugging
 #define MAX30102_INT 10 // MAX30102 interrupt pin
-#define MAX30102_SDA 17 // MAX30102 I2C SDA pin
-#define MAX30102_SCL 18 // MAX30102 I2C SCL pin
+#define MAX30102_SDA 11 // MAX30102 I2C SDA pin
+#define MAX30102_SCL 12 // MAX30102 I2C SCL pin
 
 //#define MAX30102_DEBUG // Enable serial data printing for debugging
 

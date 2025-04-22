@@ -13,18 +13,22 @@ void serial_sendback(){
     sendbackMsg = "";
 }
 
+#ifdef SYSOP_DEBUG
 void compileACK(){
     sendbackMsg = "ACK-";
     sendbackMsg += receivedMsg;
     serial_sendback();
 }
+#endif
 
 void process_string(){
     receivedMsg.trim();
     // Every command will return NUM_SAMPLES of samples.
     // Returning OBJECT TEMPERATURE results
     if (receivedMsg.equals("TEMP-GETOBJ")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
         
         for (sendbackTimes = 0; sendbackTimes < NUM_SAMPLES; sendbackTimes++){
             updateTempData();
@@ -38,7 +42,9 @@ void process_string(){
 
     // Returning AMBIENT TEMPERATURE results
     if (receivedMsg.equals("TEMP-GETAMB")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
 
         for (sendbackTimes = 0; sendbackTimes < NUM_SAMPLES; sendbackTimes++){
             updateTempData();
@@ -52,7 +58,9 @@ void process_string(){
 
     // Returning BPM and OXYGEN SATURATION results
     if (receivedMsg.equals("POX-GETDATA")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){
@@ -70,7 +78,9 @@ void process_string(){
     }
 
     if (receivedMsg.equals("SCALE-GETWEIGHT")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){
@@ -91,32 +101,42 @@ void process_string(){
 
     // SERVO SECTION
     if (receivedMsg.equals("SERVO-MOVEUP")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
         servo_setMoveFlag(SERVO_MOVE_UP);
         return;
     }
 
     if (receivedMsg.equals("SERVO-MOVEDN")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
         servo_setMoveFlag(SERVO_MOVE_DOWN);
         return;
     }
 
     if (receivedMsg.equals("SERVO-STOP")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
         servo_setMoveFlag(SERVO_MOVE_STOP);
         return;
     }
 
     if (receivedMsg.equals("SERVO-MOVEDEFAULT")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
         servo_setMoveFlag(SERVO_MOVE_DEFAULT);
         resetWeightSendFlag();
         return;
     }
 
     if (receivedMsg.equals("SERVO-GETANGLE")){
+        #ifdef SYSOP_DEBUG
         compileACK();
+        #endif
 
         sendbackTimes = 0;
         while(sendbackTimes < NUM_SAMPLES){

@@ -17,6 +17,8 @@
 
 #define NUM_SAMPLES 5 // Number of samples to send to the serial
 
+#define SYSOP_DEBUG // Debugging mode, uncomment to enable
+
 /**
  * @brief Initialize and start serial receive and processing commands
  * @return Void.

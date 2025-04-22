@@ -13,8 +13,8 @@
 #include <HerkulexServo.h>
 
 // Setup pins and IDs
-#define SERVO_PIN_RX    39
-#define SERVO_PIN_TX    40
+#define SERVO_PIN_RX    9
+#define SERVO_PIN_TX    8
 #define SERVO_ID        0x03
 
 // Move mode flags
@@ -24,12 +24,12 @@
 #define SERVO_MOVE_DEFAULT  4
 
 // Positional defines
-#define SERVO_START_POS     512 // Starting position of the servo.
-#define SERVO_MAX_UP_POS    660 // Maximum up-turning position. DO NOT CHANGE.
-#define SERVO_MAX_DN_POS    390 // Maximum down-turning position. DO NOT CHANGE.
+#define SERVO_START_POS     500 // Starting position of the servo.
+#define SERVO_MAX_UP_POS    690 // Maximum up-turning position. DO NOT CHANGE.
+#define SERVO_MAX_DN_POS    375 // Maximum down-turning position. DO NOT CHANGE.
 
 // For controlling the servo's turning speed
-#define SERVO_SPD   25
+#define SERVO_SPD   40
 /**
  * @brief Start the servo serial communication and set initial position.
  * @return Void.

@@ -5,7 +5,6 @@ void setup(){
   delay(2000);
 
   // Activates sensors, tries to reactivate them 1 time if it fails.
-
   // Start Pulse oximeter sensor
   Serial.println("POX-START");
   if (!initMAX30102())

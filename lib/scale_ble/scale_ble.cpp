@@ -92,7 +92,9 @@ void connectModeMAC(BLEAdvertisedDevice &BLEdevice){
     }
 #endif
 }
+
 // Search for our Smart Scale using device's name (connectionMode 1)
+String scaleName = xiaomiScaleName;
 void connectModeName(BLEAdvertisedDevice &BLEdevice){
 #ifdef BLE_DEBUG
     if (BLEdevice.getName() != xiaomiScaleName){
@@ -108,7 +110,7 @@ void connectModeName(BLEAdvertisedDevice &BLEdevice){
         goConnect = true;
     }
 #else
-        if (BLEdevice.getName() == xiaomiScaleName){
+        if (BLEdevice.getName() == scaleName){
         BLEDevice::getScan() -> stop();
         xiaomiScale = new BLEAdvertisedDevice(BLEdevice);
         goConnect = true;
@@ -144,12 +146,12 @@ class ClientCB:public BLEClientCallbacks{
         connected_flag = false;
     }
 };
-
+BLEClient* pClient;
 bool initScaleConnection() {
     
 #ifdef BLE_DEBUG
     Serial.println("Establishing communications with the scale:");
-    BLEClient* pClient = BLEDevice::createClient();
+    pClient = BLEDevice::createClient();
     Serial.println("BLE client created");
     pClient -> setClientCallbacks(new ClientCB());
 #else
