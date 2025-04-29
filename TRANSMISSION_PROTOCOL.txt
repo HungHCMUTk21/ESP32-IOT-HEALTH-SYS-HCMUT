@@ -1,0 +1,52 @@
+		TRANSMISSION PROTOCOL
+
+		Computer side requests:
+	Temperature:
+TEMP-GETOBJ		// Get object's temperature from temp sensor
+TEMP-GETAMB		// Get ambient temperature from temp sensor
+
+	Pulse oximetry:
+POX-GETDATA		// Get data from pulse oximeter sensor
+
+	Weight:
+SCALE-GETWEIGHT		// Get definitive weight from BLE Scale
+
+	Servo:
+SERVO-MOVEUP		// Move the servo upwards
+SERVO-MOVEDN		// Move the servo downwards
+SERVO-STOP		// Stop the servo's movement
+SERVO-MOVEDEFAULT	// Move the servo back to its default position
+SERVO-GETANGLE		// Get the servo's current angle
+
+	ESP32 returns:
+ACK-[send back computer message]
+NACK-SYNTAXERROR
+
+	Temperature:
+TEMP-START	// Starting temperature sensor
+TEMP-STATUS-0 	// Temp off
+TEMP-STATUS-1 	// Temp on
+OBJ-[object's temperature in number]
+AMB-[ambient temperature in number]
+
+	Pulse oximeter:
+POX-START	// Starting temperature sensor
+POX-STATUS-0 	// pox off
+POX-STATUS-1 	// pox on
+POX-[beats per minute number]-[oxy saturation number]
+
+	Weight:
+SCALE-ERROR-NODATA 	// Scale has no weight data to return
+SCALE-ERROR-NOSERVICE 	// Scale has the wrong service UUID
+SCALE-ERROR-NOCHAR 	// Scale has the wrong service UUID
+
+SCALE-BLE-START	// Starting BLE connection to the scale
+SCALE-STATUS-0	// Scale disconnected
+SCALE-STATUS-1	// Scale connected
+WEIGHT-[weight number]
+
+	Servo:
+SERVO-START	// Starting servo
+SERVO-STATUS-1 	// Servo on
+SERVO-STATUS-0	// Servo off
+ANGLE-[current angle number]

@@ -29,6 +29,7 @@
 #define SERVO_MAX_DN_POS    375 // Maximum down-turning position. DO NOT CHANGE.
 
 // For controlling the servo's turning speed
+// 40 is the minimum recommended speed, or else the servo suffers from inadequate torque to handle the screen
 #define SERVO_SPD   40
 /**
  * @brief Start the servo serial communication and set initial position.
