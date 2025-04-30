@@ -1,5 +1,5 @@
 # HCMUT Health Station
-This is an Arduino C++ code for the HCMUT Healt Station, using MLX90614 contactless IR sensor, MAX30102 particle sensor for pulse oximetry, BLE integration for the Xiaomi Smart Scale 2 and HerkuleX DRS-0201 smart servo control.
+This is an Arduino C++ code for the HCMUT Health Station, using MLX90614 contactless IR sensor, MAX30102 particle sensor for pulse oximetry, BLE integration for the Xiaomi Smart Scale 2 and HerkuleX DRS-0201 smart servo control.
 
 These are the following third-party libraries that are used in this project (with their respective dependecies):
 * [Adafruit-MLX90614-Library](https://github.com/adafruit/Adafruit-MLX90614-Library)
